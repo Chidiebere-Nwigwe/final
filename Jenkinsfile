@@ -6,50 +6,54 @@ pipeline {
     }
     stages {
 
-        // stage('Build') {
-        //     agent {
-        //         docker {
-        //             image 'node:22.13.1-alpine'
-        //             // for the same docker image, reuse
-        //             reuseNode true
-        //         }
-        //     }
-        //     steps {
-        //         sh '''
-        //             # list all files
-        //             ls -la
-        //             node --version
-        //             npm --version
-        //             # npm install
-        //             npm ci
-        //             npm run build
-        //             ls -la
-        //         '''
-        //     }
-        // }
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:22.13.1-alpine'
+                    // for the same docker image, reuse
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    # list all files
+                    ls -la
+                    node --version
+                    npm --version
+                    # npm install
+                    npm ci
+                    npm run build
+                    ls -la
+                '''
+            }
+        }
  
-        // stage('Test') {
-        //     agent {
-        //         docker {
-        //             image 'node:22.13.1-alpine'
-        //             reuseNode true
-        //         }
-        //     }
+        stage('Test') {
+            agent {
+                docker {
+                    image 'node:22.13.1-alpine'
+                    reuseNode true
+                }
+            }
  
-        //     steps {
-        //         sh '''
-        //             test -f build/index.html
-        //             npm test
-        //         '''
-        //     }
-        // }
+            steps {
+                sh '''
+                    test -f build/index.html
+                    npm test
+                '''
+            }
+        }
         stage('Deploy to AWS') {
             agent {
                 docker {
                     image 'amazon/aws-cli'
                     reuseNode true
-                    args '-u root --entrypoint=""'
+                    args '--entrypoint=""'
                 }
+            }
+
+            environment{
+                AWS_S3_BUCKET = 'final-20250414'
             }
            
             steps {
@@ -58,7 +62,8 @@ pipeline {
                         aws --version
                         aws s3 ls
                         echo "Hello S3!" > index.html
-                        aws s3 cp index.html s3://final-20250414/index.html
+                        # aws s3 cp index.html s3://final-20250414/index.html
+                        aws s3 sync build s3://AWS_S3_BUCKET
                     '''
                 }
             }
