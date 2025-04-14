@@ -50,9 +50,9 @@ pipeline {
                 }
             }
 
-            environment{
-                AWS_S3_BUCKET = 'final-20250414'
-            }
+                environment{
+                    AWS_S3_BUCKET = 'final-20250414'
+                }
     
            
             steps {
@@ -62,7 +62,7 @@ pipeline {
                         aws s3 ls
                         # echo "Hello S3!" > index.html
                         # aws s3 cp index.html s3://final-20250414/index.html
-                        aws s3 sync build s3://AWS_S3_BUCKET
+                        aws s3 sync build s3://$AWS_S3_BUCKET
                     '''
                 }
             }
