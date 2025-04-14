@@ -2,10 +2,6 @@
 pipeline {
     agent any
 
-    environment{
-        AWS_S3_BUCKET = 'final-20250414'
-    }
-    
     stages {
 
         stage('Build') {
@@ -53,6 +49,11 @@ pipeline {
                     args '--entrypoint=""'
                 }
             }
+
+            environment{
+                AWS_S3_BUCKET = 'final-20250414'
+            }
+    
            
             steps {
                 withCredentials([usernamePassword(credentialsId: 'my-final', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
