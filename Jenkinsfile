@@ -106,7 +106,7 @@ pipeline {
            
             steps {
                 withCredentials([usernamePassword(credentialsId: 'my-final', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
-                {  
+                
                     sh '''
                         aws --version
                         yum install jq -y
@@ -114,10 +114,10 @@ pipeline {
                         LATEST_TD_REVISION=$(aws ecs register-task-definition --cli-input-json file://aws/task-definition.json | jq '.taskDefinition.revision')
                         aws ecs update-service --cluster my-final-project-20250414 --service my-final-app-Service-Prod  --task-definition Final-TaskDefinition-Prod:$LATEST_TD_REVISION
                     '''
-                }
+            
             }
         }
     }
 }
-}
+
  
