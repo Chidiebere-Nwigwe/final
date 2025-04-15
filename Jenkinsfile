@@ -48,32 +48,32 @@ pipeline {
                 '''
             }
         }
-        stage('Deploy to AWS') {
-            agent {
-                docker {
-                    image 'amazon/aws-cli'
-                    reuseNode true
-                    args '--entrypoint=""'
-                }
-            }
+        // stage('Deploy to AWS') {
+        //     agent {
+        //         docker {
+        //             image 'amazon/aws-cli'
+        //             reuseNode true
+        //             args '--entrypoint=""'
+        //         }
+        //     }
 
-                environment{
-                    AWS_S3_BUCKET = 'final-20250414'
-                }
+        //         environment{
+        //             AWS_S3_BUCKET = 'final-20250414'
+        //         }
     
            
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'my-final', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
-                    sh '''
-                        aws --version
-                        aws s3 ls
-                        # echo "Hello S3!" > index.html
-                        # aws s3 cp index.html s3://final-20250414/index.html
-                        aws s3 sync build s3://$AWS_S3_BUCKET
-                    '''
-                }
-            }
-        }
+        //     steps {
+        //         withCredentials([usernamePassword(credentialsId: 'my-final', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
+        //             sh '''
+        //                 aws --version
+        //                 aws s3 ls
+        //                 # echo "Hello S3!" > index.html
+        //                 # aws s3 cp index.html s3://final-20250414/index.html
+        //                 aws s3 sync build s3://$AWS_S3_BUCKET
+        //             '''
+        //         }
+        //     }
+        // }
         stage('Build My Docker Image'){
 
             agent{
